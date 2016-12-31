@@ -74,7 +74,47 @@ $(function() {
  */
 function addMarker(place)
 {
-    //  TODO
+    var marker = new MarkerWithLabel({
+	icon: "http://maps.google.com/mapfiles/kml/pal2/icon31.png",	
+	position: new google.maps.LatLng(place.latitude, place.longitude),
+	map: map,
+	labelContent: place.place_name + ", " + place.admin_name1,
+	labelAnchor: new google.maps.Point(20, 0),
+	labelClass: "label"
+    });
+    
+    google.maps.event.addListener(marker, "click", function() {
+	showInfo(marker);
+	$.getJSON("articles.php", {
+	    geo: place.postal_code
+	})
+	.done(function(data, textStatus, jqXHR) 
+	{
+	    // if no news
+	    if (data.length === 0)
+	    {
+		    showInfo(marker, "No News.");
+	    }
+	    // else if display news in unordered list
+	    else
+	    {
+		    var ulist = "<ul>";
+		    var template = _.template("<li><a href = '<%- link %>' target = '_blank'><%- title %></a></li>");
+		    for (var i = 0, n = data.length; i < n; i++)
+		    {
+		        ulist += template({
+			    link: data[i].link,
+			    title: data[i].title
+		        }); 
+		    }
+
+		    ulist += "</ul>";	
+		    showInfo(marker, ul);
+	    }
+	});
+    });
+    markers.push(marker);
+    
 
 }
 
