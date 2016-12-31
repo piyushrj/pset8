@@ -200,7 +200,11 @@ function hideInfo()
  */
 function removeMarkers()
 {
-    // TODO
+    for (var i = 0, n = markers.length; i < n; i++)
+    {
+	markers[i].setMap(null);
+    }
+    markers.length=0;
 }
 
 /**
