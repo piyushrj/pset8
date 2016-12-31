@@ -83,6 +83,17 @@ function addMarker(place)
 	labelClass: "label"
     });
     
+    marker.addListener('click', toggleBounce);
+
+    
+    function toggleBounce() {
+    if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+    } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+    }
+    
     google.maps.event.addListener(marker, "click", function() {
 	showInfo(marker);
 	$.getJSON("articles.php", {
@@ -90,12 +101,10 @@ function addMarker(place)
 	})
 	.done(function(data, textStatus, jqXHR) 
 	{
-	    // if no news
 	    if (data.length === 0)
 	    {
 		    showInfo(marker, "No News.");
 	    }
-	    // else if display news in unordered list
 	    else
 	    {
 		    var ulist = "<ul>";
@@ -109,13 +118,11 @@ function addMarker(place)
 		    }
 
 		    ulist += "</ul>";	
-		    showInfo(marker, ul);
+		    showInfo(marker, ulist);
 	    }
 	});
     });
     markers.push(marker);
-    
-
 }
 
 /**
